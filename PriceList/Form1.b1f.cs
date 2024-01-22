@@ -80,6 +80,10 @@ namespace PriceList
                 SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                 oRsGetDocNum.DoQuery(getDocNum);
                 EditText2.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
+                string curdat = DateTime.Parse(DateTime.Now.ToString()).ToString("yyyyMMdd");
+                EditText3.Value = curdat;
+                objform.Items.Item("etccod").Click();
+
             }
             catch (Exception Ex)
             {
@@ -171,13 +175,13 @@ namespace PriceList
             }
             if (pVal.ColUID == "Cfri")
             {
-                SAPbouiCOM.EditText oEditText1 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CBpr").Cells.Item(1).Specific;
-                SAPbouiCOM.EditText oEditText2 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cfri").Cells.Item(1).Specific;
+                SAPbouiCOM.EditText oEditText1 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CBpr").Cells.Item(pVal.Row).Specific;
+                SAPbouiCOM.EditText oEditText2 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cfri").Cells.Item(pVal.Row).Specific;
 
                 double value1 = Convert.ToDouble(oEditText1.Value);
                 double value2 = Convert.ToDouble(oEditText2.Value);
                 double value3 = value1 + value2;
-                SAPbouiCOM.EditText oEditTex3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CPrc").Cells.Item(1).Specific;
+                SAPbouiCOM.EditText oEditTex3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CPrc").Cells.Item(pVal.Row).Specific;
                 oEditTex3.Value = value3.ToString();
 
             }
@@ -364,12 +368,12 @@ namespace PriceList
                     oColumn.Editable = true;
 
                     string Val1 = EditText0.Value;
-                    string Val2 = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(1).Specific).Value;
+                    string Val2 = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row).Specific).Value;
                     string getprice = @"SELECT Top 1 IFNULL(T0.""U_prc"", 0)  from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
                     SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetDocNum.DoQuery(getprice);
 
-                    SAPbouiCOM.EditText oEditText3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clpr").Cells.Item(1).Specific;                    
+                    SAPbouiCOM.EditText oEditText3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clpr").Cells.Item(pVal.Row).Specific;                    
                     oEditText3.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
                     
 
@@ -378,7 +382,7 @@ namespace PriceList
                     oRsGetfdat.DoQuery(getefdate);
 
                   
-                    SAPbouiCOM.EditText oEditText4 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clefr").Cells.Item(1).Specific;
+                    SAPbouiCOM.EditText oEditText4 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clefr").Cells.Item(pVal.Row).Specific;
                     string value = DateTime.Parse(oRsGetfdat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
                     oEditText4.Value = value;
                     
@@ -389,7 +393,7 @@ namespace PriceList
                     oRsGettdat.DoQuery(getetdate);
 
                     
-                    SAPbouiCOM.EditText oEditText5 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cleto").Cells.Item(1).Specific;
+                    SAPbouiCOM.EditText oEditText5 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cleto").Cells.Item(pVal.Row).Specific;
                     string value1 = DateTime.Parse(oRsGettdat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
                     oEditText5.Value = value1;
                     
@@ -400,7 +404,7 @@ namespace PriceList
                     oRsGetudat.DoQuery(getutdate);
 
                     
-                    SAPbouiCOM.EditText oEditText6 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CUeto").Cells.Item(1).Specific;
+                    SAPbouiCOM.EditText oEditText6 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CUeto").Cells.Item(pVal.Row).Specific;
                     string value2 = DateTime.Parse(oRsGetudat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
                     oEditText6.Value = value2;
 
