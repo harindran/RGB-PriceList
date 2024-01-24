@@ -164,6 +164,26 @@ namespace PriceList
         private void Matrix0_LostFocusAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             //throw new System.NotImplementedException();
+            if (pVal.ColUID=="citna")
+            {
+                try
+                {
+                    string itno = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row).Specific).Value;
+                    string getUOM = @"SELECT ""SalUnitMsr""  from ""OITM"" where ""ItemCode"" = '" + itno + "'";
+                    SAPbobsCOM.Recordset oRsGetUOM = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRsGetUOM.DoQuery(getUOM);
+
+                    SAPbouiCOM.EditText oEditText3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cpru").Cells.Item(pVal.Row).Specific;
+                    oEditText3.Value = oRsGetUOM.Fields.Item(0).Value.ToString();
+
+                }
+                catch(Exception Ex)
+                {
+                    Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                }
+
+
+            }
             if (pVal.ColUID == "Ctdat")
 
             {
@@ -175,14 +195,34 @@ namespace PriceList
             }
             if (pVal.ColUID == "Cfri")
             {
-                SAPbouiCOM.EditText oEditText1 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CBpr").Cells.Item(pVal.Row).Specific;
-                SAPbouiCOM.EditText oEditText2 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cfri").Cells.Item(pVal.Row).Specific;
+                SAPbouiCOM.Column oColumn;
+                objform.Freeze(true);
+                try
+                {
 
-                double value1 = Convert.ToDouble(oEditText1.Value);
-                double value2 = Convert.ToDouble(oEditText2.Value);
-                double value3 = value1 + value2;
-                SAPbouiCOM.EditText oEditTex3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CPrc").Cells.Item(pVal.Row).Specific;
-                oEditTex3.Value = value3.ToString();
+                    oColumn = Matrix0.Columns.Item("CPrc");
+                    oColumn.Editable = true;
+
+                    SAPbouiCOM.EditText oEditText1 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CBpr").Cells.Item(pVal.Row).Specific;
+                    SAPbouiCOM.EditText oEditText2 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cfri").Cells.Item(pVal.Row).Specific;
+
+                    double value1 = Convert.ToDouble(oEditText1.Value);
+                    double value2 = Convert.ToDouble(oEditText2.Value);
+                    double value3 = value1 + value2;
+                    SAPbouiCOM.EditText oEditTex3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CPrc").Cells.Item(pVal.Row).Specific;
+                    oEditTex3.Value = value3.ToString();
+                    Matrix0.Columns.Item("Ccur").Cells.Item(pVal.Row).Click();
+                    oColumn = Matrix0.Columns.Item("CPrc");
+                    oColumn.Editable = false;
+                }
+                catch (Exception Ex)
+                {
+                    Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                }
+                finally
+                {
+                    objform.Freeze(false);
+                }
 
             }
 
@@ -351,7 +391,7 @@ namespace PriceList
         {
             BubbleEvent = true;
 
-            if (pVal.ColUID == "CPrc" && pVal.CharPressed == 9)
+            if (pVal.ColUID == "Ccur" && pVal.CharPressed == 9)
             {
                 SAPbouiCOM.Column oColumn;
                 objform.Freeze(true);
@@ -408,7 +448,7 @@ namespace PriceList
                     string value2 = DateTime.Parse(oRsGetudat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
                     oEditText6.Value = value2;
 
-                    Matrix0.Columns.Item("CPrc").Cells.Item(pVal.Row).Click();
+                    Matrix0.Columns.Item("Ccur").Cells.Item(pVal.Row).Click();
                     oColumn = Matrix0.Columns.Item("Clpr");
                     oColumn.Editable = false;
                     oColumn = Matrix0.Columns.Item("Clefr");
