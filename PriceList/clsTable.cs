@@ -11,12 +11,9 @@ namespace PriceList
         Dictionary<string, string> keyvaltbl = new Dictionary<string, string>();
         public void FieldCreation()
         {
-
-
             AddFields("@PRICELIST", "docdat", "Doc Date", SAPbobsCOM.BoFieldTypes.db_Date);
             AddFields("@PRICELIST", "Ccode", "Cus Code", SAPbobsCOM.BoFieldTypes.db_Alpha,50);
             AddFields("@PRICELIST", "CNam", "Cus Name", SAPbobsCOM.BoFieldTypes.db_Alpha,200);
-            AddFields("@PRICELIST", "att", "Attach", SAPbobsCOM.BoFieldTypes.db_Alpha, 200);
             AddFields("@PRICELISTR", "Ino", "Item No", SAPbobsCOM.BoFieldTypes.db_Alpha, 50);
             AddFields("@PRICELISTR", "INam", "Item Name", SAPbobsCOM.BoFieldTypes.db_Alpha, 200);
             AddFields("@PRICELISTR", "puni", "Pricing Unit", SAPbobsCOM.BoFieldTypes.db_Alpha,40);
@@ -30,6 +27,13 @@ namespace PriceList
             AddFields("@PRICELISTR", "lef", "Last Eff From", SAPbobsCOM.BoFieldTypes.db_Date);
             AddFields("@PRICELISTR", "let", "Last Eff To", SAPbobsCOM.BoFieldTypes.db_Date);
             AddFields("@PRICELISTR", "uet", "Update Eff To", SAPbobsCOM.BoFieldTypes.db_Date);
+            AddFields("@PRICELISTA", "TrgtPath", "Target Path", SAPbobsCOM.BoFieldTypes.db_Memo, 200);
+            AddFields("@PRICELISTA", "SrcPath", "Source Path", SAPbobsCOM.BoFieldTypes.db_Memo, 200);
+            AddFields("@PRICELISTA", "Date", "Attachment Date", SAPbobsCOM.BoFieldTypes.db_Date);
+            AddFields("@PRICELISTA", "FileName", "File Name", SAPbobsCOM.BoFieldTypes.db_Alpha, 30);
+            AddFields("@PRICELISTA", "FileExt", "File Extension", SAPbobsCOM.BoFieldTypes.db_Alpha, 30);
+            AddFields("@PRICELISTA", "FreeText", "Free Text", SAPbobsCOM.BoFieldTypes.db_Alpha, 100);
+
 
 
         }

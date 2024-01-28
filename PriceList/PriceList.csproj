@@ -70,8 +70,10 @@
       <FormCategory>UserForm</FormCategory>
     </None>
     <Compile Include="ClsAddon.cs" />
+    <Compile Include="clsGlobalMethods.cs" />
     <Compile Include="clsMenuEvent.cs" />
     <Compile Include="clsModule.cs" />
+    <Compile Include="clsRightClickEvent.cs" />
     <Compile Include="clsTable.cs" />
     <Compile Include="Form1.b1f.cs">
       <DependentUpon>Form1.b1f</DependentUpon>

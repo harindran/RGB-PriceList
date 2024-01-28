@@ -16,6 +16,7 @@ namespace PriceList
     {
         public static SAPbouiCOM.Form objform, ocompany;
         private string Returnfilename = "";
+        public SAPbouiCOM.DBDataSource odbdsHeader, odbdsContent, odbdsAttachment, odbdsBoqItem, odbdsBoqLabour;
         public Form1()
         {
         }
@@ -31,9 +32,9 @@ namespace PriceList
             this.StaticText3 = ((SAPbouiCOM.StaticText)(this.GetItem("stddat").Specific));
             this.EditText0 = ((SAPbouiCOM.EditText)(this.GetItem("etccod").Specific));
             this.EditText0.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText0_ChooseFromListAfter);
-            //       this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
+            //                   this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
             this.EditText1 = ((SAPbouiCOM.EditText)(this.GetItem("etcus").Specific));
-            //       this.EditText1.KeyDownBefore += new SAPbouiCOM._IEditTextEvents_KeyDownBeforeEventHandler(this.EditText1_KeyDownBefore);
+            //                   this.EditText1.KeyDownBefore += new SAPbouiCOM._IEditTextEvents_KeyDownBeforeEventHandler(this.EditText1_KeyDownBefore);
             this.EditText1.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText1_ChooseFromListAfter);
             this.EditText2 = ((SAPbouiCOM.EditText)(this.GetItem("etdno").Specific));
             this.EditText3 = ((SAPbouiCOM.EditText)(this.GetItem("etddat").Specific));
@@ -46,13 +47,28 @@ namespace PriceList
             this.Folder2 = ((SAPbouiCOM.Folder)(this.GetItem("Item_14").Specific));
             this.Button2 = ((SAPbouiCOM.Button)(this.GetItem("1").Specific));
             this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
-            //   this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
+            //               this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
             this.Button3 = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
-            this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("statt").Specific));
-            this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("etatt").Specific));
-            this.Button4 = ((SAPbouiCOM.Button)(this.GetItem("Item_21").Specific));
-            this.Button4.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button4_ClickBefore);
+            //            this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("statt").Specific));
+            //            this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("etatt").Specific));
+            //            this.Button4 = ((SAPbouiCOM.Button)(this.GetItem("Item_21").Specific));
+            //            this.Button4.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button4_ClickBefore);
             this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_0").Specific));
+            //          objform.DataBrowser.BrowseBy = "etdno";
+            //            this.oActiveForm.DataBrowser.BrowseBy = "Item_16";
+            //       this.Button8.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button8_ClickBefore);
+            //       this.Button8.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button8_ClickAfter);
+            //       this.Matrix2.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix2_PressedAfter);
+            this.Matrix3 = ((SAPbouiCOM.Matrix)(this.GetItem("Item_1").Specific));
+            this.Matrix3.ClickAfter += new SAPbouiCOM._IMatrixEvents_ClickAfterEventHandler(this.Matrix3_ClickAfter);
+            this.Matrix3.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix3_PressedAfter);
+            this.Button11 = ((SAPbouiCOM.Button)(this.GetItem("btnbr").Specific));
+            this.Button11.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button11_ClickBefore);
+            this.Button11.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button11_ClickAfter);
+            this.Button12 = ((SAPbouiCOM.Button)(this.GetItem("btndi").Specific));
+            this.Button12.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button12_ClickAfter);
+            this.Button13 = ((SAPbouiCOM.Button)(this.GetItem("btndel").Specific));
+            this.Button13.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button13_ClickAfter);
             this.OnCustomInitialize();
 
         }
@@ -72,10 +88,15 @@ namespace PriceList
         private void OnCustomInitialize()
         {
             //objform = clsModule.objaddon.objapplication.Forms.ActiveForm;
-            Matrix0.AddRow(1);
+            //Matrix0.AddRow(1);
+            clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
+            odbdsHeader = objform.DataSources.DBDataSources.Item("@PRICELIST");
+            odbdsContent = objform.DataSources.DBDataSources.Item("@PRICELISTR");//Content
+            odbdsAttachment = objform.DataSources.DBDataSources.Item("@PRICELISTA");
             EditText2.Value = "";
             try
             {
+                
                 string getDocNum = @"Select IfNull(Max(""DocNum""),0) + 1 from ""@PRICELIST""";
                 SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                 oRsGetDocNum.DoQuery(getDocNum);
@@ -83,7 +104,7 @@ namespace PriceList
                 string curdat = DateTime.Parse(DateTime.Now.ToString()).ToString("yyyyMMdd");
                 EditText3.Value = curdat;
                 objform.Items.Item("etccod").Click();
-
+                
             }
             catch (Exception Ex)
             {
@@ -111,9 +132,6 @@ namespace PriceList
         private SAPbouiCOM.Folder Folder2;
         private SAPbouiCOM.Button Button2;
         private SAPbouiCOM.Button Button3;
-        private SAPbouiCOM.StaticText StaticText4;
-        private SAPbouiCOM.EditText EditText4;
-        private SAPbouiCOM.Button Button4;
         private SAPbouiCOM.LinkedButton LinkedButton0;
         //private SAPbouiCOM.BoFormMode Mode;
 
@@ -184,12 +202,19 @@ namespace PriceList
 
 
             }
+
+            if (pVal.ColUID == "Citno")
+            {
+                    //clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
+
+            }
             if (pVal.ColUID == "Ctdat")
 
             {
+             //   clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
 
-                Matrix0.AddRow(1,-1);
-                Matrix0.ClearRowData(Matrix0.RowCount);
+                //Matrix0.AddRow(1,-1);
+                //Matrix0.ClearRowData(Matrix0.RowCount);
                 Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row + 1).Click();
 
             }
@@ -223,161 +248,33 @@ namespace PriceList
                 {
                     objform.Freeze(false);
                 }
-
+                clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
             }
 
         }
-
-        public string FindFile()
+        void AutogenDocNum()
         {
-            System.Threading.Thread ShowFolderBrowserThread;
 
+            EditText2.Value = "";
             try
             {
-                ShowFolderBrowserThread = new System.Threading.Thread(ShowFolderBrowser);
 
-                if (ShowFolderBrowserThread.ThreadState == System.Threading.ThreadState.Unstarted)
-                {
-                    ShowFolderBrowserThread.SetApartmentState(System.Threading.ApartmentState.STA);
-                    ShowFolderBrowserThread.Start();
-                }
-                else if (ShowFolderBrowserThread.ThreadState == System.Threading.ThreadState.Stopped)
-                {
-                    ShowFolderBrowserThread.Start();
-                    ShowFolderBrowserThread.Join();
-                }
-
-                while (ShowFolderBrowserThread.ThreadState == System.Threading.ThreadState.Running)
-                {
-                    System.Windows.Forms.Application.DoEvents();
-                    // ShowFolderBrowserThread.Sleep(100)
-                    Thread.Sleep(100);
-                }
-
-                if (Returnfilename != "")
-                    return Returnfilename;
-
+                string getDocNum = @"Select IfNull(Max(""DocNum""),0) + 1 from ""@PRICELIST""";
+                SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                oRsGetDocNum.DoQuery(getDocNum);
+                EditText2.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
+                string curdat = DateTime.Parse(DateTime.Now.ToString()).ToString("yyyyMMdd");
+                EditText3.Value = curdat;
+                objform.Items.Item("etccod").Click();
 
             }
-            catch (Exception ex)
+            catch (Exception Ex)
             {
-                clsModule.objaddon.objapplication.MessageBox("File Find  Method Failed : " + ex.Message);
-            }
-            return "";
-        }
-        public void ShowFolderBrowser()
-        {
-            System.Diagnostics.Process[] MyProcs;
-            OpenFileDialog OpenFile = new OpenFileDialog();
-
-            try
-            {
-                OpenFile.Multiselect = false;
-                OpenFile.Filter = "All files(*.)|*.*"; // "|*.*"
-                int filterindex = 0;
-                try
-                {
-                    filterindex = 0;
-                }
-                catch (Exception ex)
-                {
-                }
-                OpenFile.FilterIndex = filterindex;
-                OpenFile.InitialDirectory = clsModule.objaddon.objcompany.AttachMentPath; // "\\newton.tmicloud.net\DB4SHARE\OEC_TEST\Attachments\"
-                MyProcs = Process.GetProcessesByName("SAP Business One");
-
-                if (MyProcs.Length >= 1)
-                {
-                    for (int i = 0; i <= MyProcs.Length - 1; i++)
-                    {
-                        string[] comname = MyProcs[i].MainWindowTitle.ToString().Split(Convert.ToChar(@"-"));
-                        if (comname[0] == "")
-                            continue;
-                        string com = clsModule.objaddon.objcompany.CompanyName.ToUpper();
-                        if (comname[0].ToString().Trim().ToUpper() == com)
-                        {
-                            WindowWrapper MyWindow = new WindowWrapper(MyProcs[i].MainWindowHandle);
-                            System.Windows.Forms.DialogResult ret = OpenFile.ShowDialog(MyWindow);
-                            if (ret == System.Windows.Forms.DialogResult.OK)
-                                Returnfilename = OpenFile.FileName;
-                            else
-                                System.Windows.Forms.Application.ExitThread();
-                        }
-                    }
-                }
-                else
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message);
-                Returnfilename = "";
-            }
-            finally
-            {
-                OpenFile.Dispose();
-            }
-
-        }
-        public class WindowWrapper : System.Windows.Forms.IWin32Window
-        {
-            private IntPtr _hwnd;
-
-            public WindowWrapper(IntPtr handle)
-            {
-                _hwnd = handle;
-            }
-
-            public System.IntPtr Handle
-            {
-                get
-                {
-                    return _hwnd;
-                }
+                Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
         }
-        public void OpenFile(string Path)
-        {
-
-            try
-            {
-                if (string.IsNullOrEmpty(Path)) return;
-                System.Diagnostics.Process oProcess = new System.Diagnostics.Process();
-                try
-                {
-                    oProcess.StartInfo.FileName = Path;
-                    oProcess.Start();
-                }
-                catch (Exception ex1)
-                {
-                }
-                finally
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-                clsModule.objaddon.objapplication.StatusBar.SetText("" + ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
-            }
-            finally
-            {
-            }
-        }
-
-
         
-
-        private void Button4_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
-        {
-            
-            BubbleEvent = true;
-            string strFileName = FindFile();
-            this.EditText4.Value = strFileName;
-            //throw new System.NotImplementedException();
-
-        }
-
+        
         private void Matrix0_KeyDownAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             //throw new System.NotImplementedException();
@@ -412,41 +309,51 @@ namespace PriceList
                     string getprice = @"SELECT Top 1 IFNULL(T0.""U_prc"", 0)  from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
                     SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetDocNum.DoQuery(getprice);
-
                     SAPbouiCOM.EditText oEditText3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clpr").Cells.Item(pVal.Row).Specific;                    
                     oEditText3.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
                     
 
-                    string getefdate = @"SELECT Top 1 CAST(T0.""U_fdat"" AS DATE) from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getefdate = @"SELECT Top 1 IFNULL(T0.""U_fdat"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
                     SAPbobsCOM.Recordset oRsGetfdat = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetfdat.DoQuery(getefdate);
-
-                  
                     SAPbouiCOM.EditText oEditText4 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clefr").Cells.Item(pVal.Row).Specific;
                     string value = DateTime.Parse(oRsGetfdat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
+                    if(value=="18991230")
+                    {
+                        oEditText4.Value = "";
+                    }
+                    else
                     oEditText4.Value = value;
                     
 
 
-                    string getetdate = @"SELECT Top 1 CAST(T0.""U_tdat"" AS DATE) from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getetdate = @"SELECT Top 1 IFNULL(T0.""U_tdat"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
                     SAPbobsCOM.Recordset oRsGettdat = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGettdat.DoQuery(getetdate);
 
                     
                     SAPbouiCOM.EditText oEditText5 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Cleto").Cells.Item(pVal.Row).Specific;
                     string value1 = DateTime.Parse(oRsGettdat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
-                    oEditText5.Value = value1;
+                    if (value1 == "18991230")
+                    {
+                        oEditText5.Value = "";
+                    }
+                    else
+                         oEditText5.Value = value1;
                     
 
 
-                    string getutdate = @"SELECT Top 1 CAST(T1.""UpdateDate"" AS DATE) from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getutdate = @"SELECT Top 1 IFNULL(T1.""UpdateDate"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
                     SAPbobsCOM.Recordset oRsGetudat = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetudat.DoQuery(getutdate);
-
-                    
                     SAPbouiCOM.EditText oEditText6 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CUeto").Cells.Item(pVal.Row).Specific;
                     string value2 = DateTime.Parse(oRsGetudat.Fields.Item(0).Value.ToString()).ToString("yyyyMMdd");
-                    oEditText6.Value = value2;
+                    if (value2 == "18991230")
+                    {
+                        oEditText6.Value = "";
+                    }
+                    else
+                        oEditText6.Value = value2;
 
                     Matrix0.Columns.Item("Ccur").Cells.Item(pVal.Row).Click();
                     oColumn = Matrix0.Columns.Item("Clpr");
@@ -530,14 +437,29 @@ namespace PriceList
                     BubbleEvent = false;
                     Application.SBO_Application.SetStatusBarMessage("Enter To Date", SAPbouiCOM.BoMessageTime.bmt_Short, true);
                 }
-
-
+             }
+            //throw new System.NotImplementedException();
+            RemoveLastrow(Matrix0, "Citno");
+            RemoveLastrow(Matrix3, "trgtpath");
+        }
+        private void RemoveLastrow(SAPbouiCOM.Matrix omatrix, string Columname_check)
+        {
+            try
+            {
+                if (omatrix.VisualRowCount == 0)
+                    return;
+                if (string.IsNullOrEmpty(Columname_check.ToString()))
+                    return;
+                if (((SAPbouiCOM.EditText)omatrix.Columns.Item(Columname_check).Cells.Item(omatrix.VisualRowCount).Specific).String == "")
+                {
+                    omatrix.DeleteRow(omatrix.VisualRowCount);
+                }
+            }
+            catch (Exception ex)
+            {
 
             }
-            //throw new System.NotImplementedException();
-
         }
-
         private void EditText1_ChooseFromListAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             //throw new System.NotImplementedException();
@@ -545,6 +467,202 @@ namespace PriceList
             
         }
 
+        private Matrix Matrix1;
+        private SAPbouiCOM.Button Button0;
+        private SAPbouiCOM.Button Button1;
+
         
+        private void Matrix1_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            //throw new System.NotImplementedException();
+            try
+            {
+                Matrix1.SelectRow(pVal.Row, true, false);
+                if (Matrix1.IsRowSelected(pVal.Row) == true)
+                {
+                    objform.Items.Item("btndi").Enabled = true;
+                    objform.Items.Item("btndel").Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+
+        private void Button0_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+                clsModule.objaddon.objglobalmethods.SetAttachMentFile(objform, odbdsHeader, Matrix1, odbdsAttachment);
+                if (Matrix1.GetNextSelectedRow(0, SAPbouiCOM.BoOrderType.ot_SelectionOrder) == -1)
+                {
+                    objform.Items.Item("btndi").Enabled = false;
+                    objform.Items.Item("btndel").Enabled = false;
+                }
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE) objform.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
+            //throw new System.NotImplementedException();
+
+        }//Browse attach
+
+        private SAPbouiCOM.Button Button4;
+
+        private void Button5_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+                //if (pVal.ActionSuccess == false) return;
+                clsModule.objaddon.objglobalmethods.OpenAttachment(Matrix1, odbdsAttachment, pVal.Row);
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
+
+            //throw new System.NotImplementedException();
+
+        }//Display Attach
+
+        private SAPbouiCOM.Button Button5;
+
+        private void Button6_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+                clsModule.objaddon.objglobalmethods.DeleteRowAttachment(objform, Matrix1, odbdsAttachment, Matrix1.GetNextSelectedRow(0, SAPbouiCOM.BoOrderType.ot_SelectionOrder));
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
+            //throw new System.NotImplementedException();
+
+        }//Delete Attachment
+
+        private SAPbouiCOM.Button Button6;
+
+        private void Matrix2_PressedAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Matrix3_PressedAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                objform.Freeze(true);
+                objform.Settings.MatrixUID = "Item_1";
+                Matrix3.AutoResizeColumns();
+                objform.Freeze(false);
+            }
+            catch (Exception ex)
+            {
+                objform.Freeze(false);
+            }
+
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Matrix3_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                Matrix3.SelectRow(pVal.Row, true, false);
+                if (Matrix3.IsRowSelected(pVal.Row) == true)
+                {
+                    objform.Items.Item("btndi").Enabled = true;
+                    objform.Items.Item("btndel").Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Button11_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+                clsModule.objaddon.objglobalmethods.SetAttachMentFile(objform, odbdsHeader, Matrix3, odbdsAttachment);
+                if (Matrix3.GetNextSelectedRow(0, SAPbouiCOM.BoOrderType.ot_SelectionOrder) == -1)
+                {
+                    objform.Items.Item("btndi").Enabled = false;
+                    objform.Items.Item("btndel").Enabled = false;
+                }
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE) objform.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
+
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Button12_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+                //if (pVal.ActionSuccess == false) return;
+                clsModule.objaddon.objglobalmethods.OpenAttachment(Matrix3, odbdsAttachment, pVal.Row);
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
+
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Button13_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+                clsModule.objaddon.objglobalmethods.DeleteRowAttachment(objform, Matrix3, odbdsAttachment, Matrix3.GetNextSelectedRow(0, SAPbouiCOM.BoOrderType.ot_SelectionOrder));
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Button11_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            RemoveLastrow(Matrix3, "trgtpath");
+            //throw new System.NotImplementedException();
+
+        }
+
+        private SAPbouiCOM.Button Button7;
+        private Matrix Matrix3;
+        private SAPbouiCOM.Button Button11;
+        private SAPbouiCOM.Button Button12;
+        private SAPbouiCOM.Button Button13;
+        //private Matrix Matrix2;
     }
 }

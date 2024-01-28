@@ -14,8 +14,10 @@ namespace PriceList
         public SAPbouiCOM.Application objapplication;
         public SAPbobsCOM.Company objcompany;
         public clsMenuEvent objmenuevent;
-        //public clsGlobalMethods objglobalmethods;
+        public clsRightClickEvent objright;
+        public clsGlobalMethods objglobalmethods;
         public SAPbouiCOM.Form objform;
+        public SAPbouiCOM.Matrix Matrix0;
         public SAPbouiCOM.Form ActualForm;
         string strsql = "";
         private SAPbobsCOM.Recordset objrs;
@@ -49,6 +51,8 @@ namespace PriceList
                     objapplication.MenuEvent += new SAPbouiCOM._IApplicationEvents_MenuEventEventHandler(objapplication_MenuEvent);
                     objapplication.ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(objapplication_ItemEvent);
                     objapplication.FormDataEvent += new SAPbouiCOM._IApplicationEvents_FormDataEventEventHandler(ref FormDataEvent);
+                    objapplication.RightClickEvent += new SAPbouiCOM._IApplicationEvents_RightClickEventEventHandler(objapplication_RightClickEvent);
+
                     objapplication.StatusBar.SetText("Addon Connected Successfully..!!!", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
                     oapplication.Run();
                 }
@@ -65,6 +69,7 @@ namespace PriceList
                 objapplication.SetStatusBarMessage(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
         }
+ 
         public bool isValidLicense()
         {
             try
@@ -118,9 +123,28 @@ namespace PriceList
         {
             
            objmenuevent = new clsMenuEvent();
-            //objglobalmethods = new clsGlobalMethods();
+           objright = new clsRightClickEvent();
+           objglobalmethods = new clsGlobalMethods();
 
         }
+        private void objapplication_RightClickEvent(ref SAPbouiCOM.ContextMenuInfo eventInfo, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            try
+            {
+                switch (objapplication.Forms.ActiveForm.TypeEx)
+                {
+                    case "PriceList.Form1":
+                        objright.RightClickEvent(ref eventInfo, ref BubbleEvent);
+                        break;
+                }
+
+            }
+            catch (Exception ex) { }
+
+
+        }
+
         private void Create_DatabaseFields()
         {
             // If objapplication.Company.UserName.ToString.ToUpper <> "MANAGER" Then
@@ -291,34 +315,63 @@ namespace PriceList
         {
 
             BubbleEvent = true;
-            switch (pVal.MenuUID)
+           
+                if (pVal.BeforeAction)
             {
-                case "1281":
-                case "1282":
-                case "1283":
-                case "1284":
-                case "1285":
-                case "1286":
-                case "1287":
-                case "1300":
-                case "1288":
-                case "1289":
-                case "1290":
-                case "1291":
-                case "1304":
-                case "1292":
-                case "1293":
-                    objmenuevent.MenuEvent_For_StandardMenu(ref pVal, ref BubbleEvent);
-                    break;
-                case "PriceList":
+                switch (pVal.MenuUID)
+                {
+                   
+                    case "1292":
+                        SAPbouiCOM.Form objform = clsModule.objaddon.objapplication.Forms.ActiveForm;
+                        Matrix0 = (SAPbouiCOM.Matrix)objform.Items.Item("Item_11").Specific;
+                        switch (clsModule.objaddon.objapplication.Forms.ActiveForm.TypeEx)
+                        {
+                            case "PriceList.Form1":
+                                int selrow = Matrix0.GetNextSelectedRow(0, SAPbouiCOM.BoOrderType.ot_SelectionOrder);
+                                Matrix0.AddRow(1, selrow);
+                                Matrix0.ClearRowData(selrow + 1);
+                                Matrix0.Columns.Item("Citno").Cells.Item(selrow + 1).Click();
+                                for (int i = 1; i <= Matrix0.RowCount; i++)
+                                {
+                                    ((SAPbouiCOM.EditText)Matrix0.Columns.Item("#").Cells.Item(i).Specific).Value = i.ToString();
+                                }
+                                break;
+                        }
+                        
+                        
+                        break;
+                    
 
-                    MenuEvent_For_FormOpening(ref pVal, ref BubbleEvent);//open for menu
-                    break;
+                }
+            }
+                switch (pVal.MenuUID)
+                {
+                    case "1281":
+                    case "1282":
+                    case "1283":
+                    case "1284":
+                    case "1285":
+                    case "1286":
+                    case "1287":
+                    case "1300":
+                    case "1288":
+                    case "1289":
+                    case "1290":
+                    case "1291":
+                    case "1304":
+
+                    case "1293":
+                        objmenuevent.MenuEvent_For_StandardMenu(ref pVal, ref BubbleEvent);
+                        break;
+                    case "PriceList":
+
+                        MenuEvent_For_FormOpening(ref pVal, ref BubbleEvent);//open for menu
+                        break;
+                  
+                }
 
             }
-
-
-        }
+        
 
 
         public void MenuEvent_For_FormOpening(ref SAPbouiCOM.MenuEvent pVal, ref bool BubbleEvent)
