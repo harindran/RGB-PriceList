@@ -215,7 +215,7 @@ namespace PriceList
 
                 //Matrix0.AddRow(1,-1);
                 //Matrix0.ClearRowData(Matrix0.RowCount);
-                Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row + 1).Click();
+                //Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row + 1).Click();
 
             }
             if (pVal.ColUID == "Cfri")
@@ -306,14 +306,14 @@ namespace PriceList
 
                     string Val1 = EditText0.Value;
                     string Val2 = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row).Specific).Value;
-                    string getprice = @"SELECT Top 1 IFNULL(T0.""U_prc"", 0)  from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getprice = @"SELECT Top 1 IFNULL(T0.""U_prc"", 0)  from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + @"' order by T0.""DocEntry"" desc";
                     SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetDocNum.DoQuery(getprice);
                     SAPbouiCOM.EditText oEditText3 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clpr").Cells.Item(pVal.Row).Specific;                    
                     oEditText3.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
                     
 
-                    string getefdate = @"SELECT Top 1 IFNULL(T0.""U_fdat"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getefdate = @"SELECT Top 1 IFNULL(T0.""U_fdat"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + @"' order by T0.""DocEntry"" desc";
                     SAPbobsCOM.Recordset oRsGetfdat = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetfdat.DoQuery(getefdate);
                     SAPbouiCOM.EditText oEditText4 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Clefr").Cells.Item(pVal.Row).Specific;
@@ -327,7 +327,7 @@ namespace PriceList
                     
 
 
-                    string getetdate = @"SELECT Top 1 IFNULL(T0.""U_tdat"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getetdate = @"SELECT Top 1 IFNULL(T0.""U_tdat"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + @"' order by T0.""DocEntry"" desc";
                     SAPbobsCOM.Recordset oRsGettdat = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGettdat.DoQuery(getetdate);
 
@@ -343,7 +343,7 @@ namespace PriceList
                     
 
 
-                    string getutdate = @"SELECT Top 1 IFNULL(T1.""UpdateDate"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + "'";
+                    string getutdate = @"SELECT Top 1 IFNULL(T1.""UpdateDate"",'') from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T0.""U_Ino"" = '" + Val2 + @"' and T1.""U_Ccode"" ='" + Val1 + @"' order by T0.""DocEntry"" desc";
                     SAPbobsCOM.Recordset oRsGetudat = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRsGetudat.DoQuery(getutdate);
                     SAPbouiCOM.EditText oEditText6 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("CUeto").Cells.Item(pVal.Row).Specific;
