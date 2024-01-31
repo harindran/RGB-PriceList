@@ -32,9 +32,9 @@ namespace PriceList
             this.StaticText3 = ((SAPbouiCOM.StaticText)(this.GetItem("stddat").Specific));
             this.EditText0 = ((SAPbouiCOM.EditText)(this.GetItem("etccod").Specific));
             this.EditText0.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText0_ChooseFromListAfter);
-            //                   this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
+            //                     this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
             this.EditText1 = ((SAPbouiCOM.EditText)(this.GetItem("etcus").Specific));
-            //                   this.EditText1.KeyDownBefore += new SAPbouiCOM._IEditTextEvents_KeyDownBeforeEventHandler(this.EditText1_KeyDownBefore);
+            //                     this.EditText1.KeyDownBefore += new SAPbouiCOM._IEditTextEvents_KeyDownBeforeEventHandler(this.EditText1_KeyDownBefore);
             this.EditText1.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText1_ChooseFromListAfter);
             this.EditText2 = ((SAPbouiCOM.EditText)(this.GetItem("etdno").Specific));
             this.EditText3 = ((SAPbouiCOM.EditText)(this.GetItem("etddat").Specific));
@@ -46,19 +46,21 @@ namespace PriceList
             this.Matrix0.ChooseFromListAfter += new SAPbouiCOM._IMatrixEvents_ChooseFromListAfterEventHandler(this.Matrix0_ChooseFromListAfter);
             this.Folder2 = ((SAPbouiCOM.Folder)(this.GetItem("Item_14").Specific));
             this.Button2 = ((SAPbouiCOM.Button)(this.GetItem("1").Specific));
+            this.Button2.PressedAfter += new SAPbouiCOM._IButtonEvents_PressedAfterEventHandler(this.Button2_PressedAfter);
+            this.Button2.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button2_ClickAfter);
             this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
-            //               this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
+            //                 this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
             this.Button3 = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
-            //            this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("statt").Specific));
-            //            this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("etatt").Specific));
-            //            this.Button4 = ((SAPbouiCOM.Button)(this.GetItem("Item_21").Specific));
-            //            this.Button4.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button4_ClickBefore);
+            //              this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("statt").Specific));
+            //              this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("etatt").Specific));
+            //              this.Button4 = ((SAPbouiCOM.Button)(this.GetItem("Item_21").Specific));
+            //              this.Button4.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button4_ClickBefore);
             this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_0").Specific));
-            //          objform.DataBrowser.BrowseBy = "etdno";
-            //            this.oActiveForm.DataBrowser.BrowseBy = "Item_16";
-            //       this.Button8.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button8_ClickBefore);
-            //       this.Button8.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button8_ClickAfter);
-            //       this.Matrix2.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix2_PressedAfter);
+            //            objform.DataBrowser.BrowseBy = "etdno";
+            //              this.oActiveForm.DataBrowser.BrowseBy = "Item_16";
+            //         this.Button8.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button8_ClickBefore);
+            //         this.Button8.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button8_ClickAfter);
+            //         this.Matrix2.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix2_PressedAfter);
             this.Matrix3 = ((SAPbouiCOM.Matrix)(this.GetItem("Item_1").Specific));
             this.Matrix3.ClickAfter += new SAPbouiCOM._IMatrixEvents_ClickAfterEventHandler(this.Matrix3_ClickAfter);
             this.Matrix3.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix3_PressedAfter);
@@ -89,27 +91,31 @@ namespace PriceList
         {
             //objform = clsModule.objaddon.objapplication.Forms.ActiveForm;
             //Matrix0.AddRow(1);
-            clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
+         
             odbdsHeader = objform.DataSources.DBDataSources.Item("@PRICELIST");
             odbdsContent = objform.DataSources.DBDataSources.Item("@PRICELISTR");//Content
             odbdsAttachment = objform.DataSources.DBDataSources.Item("@PRICELISTA");
             EditText2.Value = "";
             try
             {
-                
-                string getDocNum = @"Select IfNull(Max(""DocNum""),0) + 1 from ""@PRICELIST""";
-                SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                oRsGetDocNum.DoQuery(getDocNum);
-                EditText2.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
-                string curdat = DateTime.Parse(DateTime.Now.ToString()).ToString("yyyyMMdd");
-                EditText3.Value = curdat;
-                objform.Items.Item("etccod").Click();
-                
+                IntialLoad();
             }
             catch (Exception Ex)
             {
                Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
+        }
+
+        private void IntialLoad()
+        {
+            clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
+            string getDocNum = @"Select IfNull(Max(""DocNum""),0) + 1 from ""@PRICELIST""";
+            SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+            oRsGetDocNum.DoQuery(getDocNum);
+            EditText2.Value = oRsGetDocNum.Fields.Item(0).Value.ToString();
+            string curdat = DateTime.Parse(DateTime.Now.ToString()).ToString("yyyyMMdd");
+            EditText3.Value = curdat;
+            objform.Items.Item("etccod").Click();
         }
 
         private SAPbouiCOM.StaticText StaticText1;
@@ -138,11 +144,20 @@ namespace PriceList
         private void EditText0_ChooseFromListAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             //throw new System.NotImplementedException();
-            SAPbouiCOM.ISBOChooseFromListEventArg CFL_0 = (SAPbouiCOM.ISBOChooseFromListEventArg)pVal;
-            string Uid = CFL_0.ChooseFromListUID;
-            SAPbouiCOM.DataTable dt = CFL_0.SelectedObjects;
-            EditText1.Value = dt.GetValue("CardName",0).ToString();
-            EditText0.Value = dt.GetValue("CardCode", 0).ToString();
+            try
+            {
+                if (objform.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE) return;
+
+                SAPbouiCOM.ISBOChooseFromListEventArg CFL_0 = (SAPbouiCOM.ISBOChooseFromListEventArg)pVal;
+                string Uid = CFL_0.ChooseFromListUID;
+                SAPbouiCOM.DataTable dt = CFL_0.SelectedObjects;
+                EditText1.Value = dt.GetValue("CardName", 0).ToString();
+                EditText0.Value = dt.GetValue("CardCode", 0).ToString();
+            }
+            catch (Exception Ex)
+            {
+
+            }
 
         }
 
@@ -202,8 +217,13 @@ namespace PriceList
 
 
             }
+            if (pVal.ColUID == "CPrc")
+            {
+                SAPbouiCOM.EditText oEditText8 = (SAPbouiCOM.EditText)Matrix0.Columns.Item("Ccur").Cells.Item(pVal.Row).Specific;
+                oEditText8.Value = "INR";
+            }
 
-            if (pVal.ColUID == "Citno")
+                if (pVal.ColUID == "Citno")
             {
                     //clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
 
@@ -276,11 +296,27 @@ namespace PriceList
         
         
         private void Matrix0_KeyDownAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
-        {
-            //throw new System.NotImplementedException();
-           
-            
+            {
+            if (pVal.ItemUID == "Item_11" && pVal.CharPressed == 38)//up arrow
+            {
+              if(pVal.Row!=0)
+                {
+                    Matrix0.Columns.Item(pVal.ColUID).Cells.Item(pVal.Row - 1).Click(SAPbouiCOM.BoCellClickType.ct_Double);
+
+                }
             }
+            if (pVal.ItemUID == "Item_11" && pVal.CharPressed == 40)//down arrow
+            {
+                if (pVal.Row != Matrix0.RowCount)
+                {
+                    Matrix0.Columns.Item(pVal.ColUID).Cells.Item(pVal.Row + 1).Click(SAPbouiCOM.BoCellClickType.ct_Double);
+                }
+            }
+
+            //throw new System.NotImplementedException();
+
+
+        }
 
 
 
@@ -655,6 +691,29 @@ namespace PriceList
             BubbleEvent = true;
             RemoveLastrow(Matrix3, "trgtpath");
             //throw new System.NotImplementedException();
+
+        }
+
+        private void Button2_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            objform.Refresh();
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void Button2_PressedAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                if (!pVal.InnerEvent)
+                {
+                    IntialLoad();
+                }
+            }
+            catch (Exception Ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
+            }
 
         }
 

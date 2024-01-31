@@ -226,7 +226,7 @@ namespace PriceList
 
         }
         private void objapplication_ItemEvent(string FormUID, ref SAPbouiCOM.ItemEvent pVal, out bool BubbleEvent)
-        {
+            {
             BubbleEvent = true;
             try
             {
