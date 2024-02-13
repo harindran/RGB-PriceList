@@ -80,8 +80,8 @@ namespace PriceList
         /// </summary>
         public override void OnInitializeFormEvents()
         {
-            this.LoadAfter += new LoadAfterHandler(this.Form_LoadAfter);
-            
+            this.LoadAfter += new SAPbouiCOM.Framework.FormBase.LoadAfterHandler(this.Form_LoadAfter);
+            this.DataAddAfter += new DataAddAfterHandler(this.Form_DataAddAfter);
 
         }
 
@@ -473,7 +473,33 @@ namespace PriceList
                     BubbleEvent = false;
                     Application.SBO_Application.SetStatusBarMessage("Enter To Date", SAPbouiCOM.BoMessageTime.bmt_Short, true);
                 }
-             }
+                string val2 = EditText0.Value;
+                RemoveLastrow(Matrix0, "Citno");
+                for (int j = 1; j <=Matrix0.RowCount; j++)
+                {
+                    string it= ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(j).Specific).Value;
+                    string frdat=((SAPbouiCOM.EditText)Matrix0.Columns.Item("Cfdat").Cells.Item(j).Specific).Value;
+                    string getdetail = @"SELECT Top 1 T0.""DocEntry"",T0.""U_fdat"",T0.""U_tdat"" from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry""=T1.""DocEntry"" where T0.""U_Ino"" = '" + it + @"' and T1.""U_Ccode"" = '" + val2 + @"' order by T0.""DocEntry"" desc";
+                    SAPbobsCOM.Recordset oRsGetDocNum = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRsGetDocNum.DoQuery(getdetail);
+                    string docen = oRsGetDocNum.Fields.Item("DocEntry").Value.ToString();
+                    string fromdat = DateTime.Parse(oRsGetDocNum.Fields.Item("U_fdat").Value.ToString()).ToString("yyyyMMdd");
+                    string todat = DateTime.Parse(oRsGetDocNum.Fields.Item("U_tdat").Value.ToString()).ToString("yyyyMMdd");
+                    if (Convert.ToInt32(frdat)< Convert.ToInt32(fromdat))
+                    {
+                        Application.SBO_Application.SetStatusBarMessage("Entries added already", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                    }
+                    if (Convert.ToInt32(frdat) > Convert.ToInt32(fromdat) && Convert.ToInt32(frdat) < Convert.ToInt32(todat))
+                    {
+                        string getset = @"Update Top 1 T0 set T0.""U_tdat""= ADD_DAYS(To_date('" + frdat+ @"'), -1)  from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1  ON T0.""DocEntry""=T1.""DocEntry"" where T0.""U_Ino"" = '" + it + @"' and T1.""U_Ccode"" = '" + val2 + @"' and T0.""DocEntry""='"+docen+"'";
+                        SAPbobsCOM.Recordset oRsGetset= (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                        oRsGetset.DoQuery(getset);
+                    }
+
+                }
+                
+                
+            }
             //throw new System.NotImplementedException();
             RemoveLastrow(Matrix0, "Citno");
             RemoveLastrow(Matrix3, "trgtpath");
@@ -714,6 +740,12 @@ namespace PriceList
             {
                 Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
+
+        }
+
+        private void Form_DataAddAfter(ref BusinessObjectInfo pVal)
+        {
+            //throw new System.NotImplementedException();
 
         }
 

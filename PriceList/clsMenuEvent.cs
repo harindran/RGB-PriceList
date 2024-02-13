@@ -69,7 +69,7 @@ namespace PriceList
 
                                 //objform.Items.Item("mprodmod").Enabled = false;
                                 //objform.EnableMenu("1282", true);
-                                objform.ActiveItem = "tdocnum";
+                                objform.ActiveItem = "etdno";
                                 break;
 
                             case "1282"://Add Mode          
@@ -94,7 +94,7 @@ namespace PriceList
                                 //Application.SBO_Application.SetStatusBarMessage(Ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, true);
                             }
 
-                            objform.EnableMenu("1282", false);
+                            //objform.EnableMenu("1282", false);
                                 break;
                             case "1292"://Add Row
                                         // if (((SAPbouiCOM.Folder)objform.Items.Item("fprodmod").Specific).Selected == true) 
