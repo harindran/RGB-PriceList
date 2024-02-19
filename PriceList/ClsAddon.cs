@@ -162,12 +162,16 @@ namespace PriceList
             int Menucount =20;
             if (objapplication.Menus.Item("2048").SubMenus.Exists("PriceList"))
                 return;
-           // Menucount = 10;// objapplication.Menus.Item("8448").SubMenus.Count;
-                           // CreateMenu("", Menucount, "Check Print", SAPbouiCOM.BoMenuType.mt_POPUP, "CHKPRT", "43520")
-           CreateMenu("", Menucount, "PriceList", SAPbouiCOM.BoMenuType.mt_STRING, "PriceList", "2048");
-                           //Menucount += 1; // "43537"
+            // Menucount = 10;// objapplication.Menus.Item("8448").SubMenus.Count;
+            // CreateMenu("", Menucount, "Check Print", SAPbouiCOM.BoMenuType.mt_POPUP, "CHKPRT", "43520")
+            CreateMenu("", Menucount, "PriceList", SAPbouiCOM.BoMenuType.mt_POPUP, "PriceList", "2048");
+            Menucount = 1;// objapplication.Menus.Item("8448").SubMenus.Count;
+            CreateMenu("", Menucount, "PriceList Creation", SAPbouiCOM.BoMenuType.mt_STRING, "PriceList.Form1", "PriceList");
+            Menucount += 1;
+            CreateMenu("", Menucount, "PriceList Update", SAPbouiCOM.BoMenuType.mt_STRING, "PriceList.Form2", "PriceList"); Menucount += 1;
+            //CreateMenu("", Menucount, "PriceList Update", SAPbouiCOM.BoMenuType.mt_POPUP, "PRU", "PriceList"); Menucount = 1;
 
-            // CreateMenu("", Menucount, "Tank Master", SAPbouiCOM.BoMenuType.mt_STRING, "TNKMSTR", "4352") : Menucount += 1
+            //Menucount += 1; // "43537"
 
         }
 
@@ -363,7 +367,8 @@ namespace PriceList
                     case "1293":
                         objmenuevent.MenuEvent_For_StandardMenu(ref pVal, ref BubbleEvent);
                         break;
-                    case "PriceList":
+                    case "PriceList.Form1":
+                    case "PriceList.Form2":
 
                         MenuEvent_For_FormOpening(ref pVal, ref BubbleEvent);//open for menu
                         break;
@@ -382,10 +387,18 @@ namespace PriceList
                 {
                     switch (pVal.MenuUID)
                     {
-                        case "PriceList":
+                        case "PriceList.Form1":
                             {
                                 /////clsModule.objaddon.ActualForm = clsModule.objaddon.objapplication.Forms.ActiveForm;
                                 Form1 activeform = new Form1();
+                                activeform.Show();
+                                break;
+                            }
+                        case "PriceList.Form2":
+                            {
+                                /////clsModule.objaddon.ActualForm = clsModule.objaddon.objapplication.Forms.ActiveForm;
+                                ///
+                                Form1 activeform = new Form1(true);
                                 activeform.Show();
                                 break;
                             }

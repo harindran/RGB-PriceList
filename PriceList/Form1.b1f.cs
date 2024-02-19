@@ -8,6 +8,7 @@ using System.IO;
 using System.Diagnostics;
 using Application = SAPbouiCOM.Framework.Application;
 using SAPbouiCOM;
+using System.Globalization;
 
 namespace PriceList
 {
@@ -15,10 +16,34 @@ namespace PriceList
     class Form1 : UserFormBase
     {
         public static SAPbouiCOM.Form objform, ocompany;
+        private bool update;
         private string Returnfilename = "";
         public SAPbouiCOM.DBDataSource odbdsHeader, odbdsContent, odbdsAttachment, odbdsBoqItem, odbdsBoqLabour;
         public Form1()
         {
+            //try
+            //{
+            //    objform.AutoManaged = false;
+            //}
+            //catch (Exception ex)
+            //{
+            //    clsModule.objaddon.objapplication.StatusBar.SetText("Exception: " + ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            //}
+        }
+
+        public Form1(bool update)
+        {
+            try
+            {
+                objform.Mode = SAPbouiCOM.BoFormMode.fm_FIND_MODE;
+                objform.Items.Item("1").Click();
+                this.update = update;
+                objform.Title = "Price List update";
+            }
+            catch (Exception ex)
+            {
+                clsModule.objaddon.objapplication.StatusBar.SetText("Exception: " + ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
         }
 
         /// <summary>
@@ -31,10 +56,13 @@ namespace PriceList
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("stdno").Specific));
             this.StaticText3 = ((SAPbouiCOM.StaticText)(this.GetItem("stddat").Specific));
             this.EditText0 = ((SAPbouiCOM.EditText)(this.GetItem("etccod").Specific));
+            this.EditText0.GotFocusAfter += new SAPbouiCOM._IEditTextEvents_GotFocusAfterEventHandler(this.EditText0_GotFocusAfter);
+            this.EditText0.LostFocusAfter += new SAPbouiCOM._IEditTextEvents_LostFocusAfterEventHandler(this.EditText0_LostFocusAfter);
+            this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
             this.EditText0.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText0_ChooseFromListAfter);
-            //                     this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
+            //                        this.EditText0.KeyDownAfter += new SAPbouiCOM._IEditTextEvents_KeyDownAfterEventHandler(this.EditText0_KeyDownAfter);
             this.EditText1 = ((SAPbouiCOM.EditText)(this.GetItem("etcus").Specific));
-            //                     this.EditText1.KeyDownBefore += new SAPbouiCOM._IEditTextEvents_KeyDownBeforeEventHandler(this.EditText1_KeyDownBefore);
+            //                        this.EditText1.KeyDownBefore += new SAPbouiCOM._IEditTextEvents_KeyDownBeforeEventHandler(this.EditText1_KeyDownBefore);
             this.EditText1.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText1_ChooseFromListAfter);
             this.EditText2 = ((SAPbouiCOM.EditText)(this.GetItem("etdno").Specific));
             this.EditText3 = ((SAPbouiCOM.EditText)(this.GetItem("etddat").Specific));
@@ -49,18 +77,18 @@ namespace PriceList
             this.Button2.PressedAfter += new SAPbouiCOM._IButtonEvents_PressedAfterEventHandler(this.Button2_PressedAfter);
             this.Button2.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button2_ClickAfter);
             this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
-            //                 this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
+            //                    this.Button2.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button2_ClickBefore);
             this.Button3 = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
-            //              this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("statt").Specific));
-            //              this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("etatt").Specific));
-            //              this.Button4 = ((SAPbouiCOM.Button)(this.GetItem("Item_21").Specific));
-            //              this.Button4.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button4_ClickBefore);
+            //                 this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("statt").Specific));
+            //                 this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("etatt").Specific));
+            //                 this.Button4 = ((SAPbouiCOM.Button)(this.GetItem("Item_21").Specific));
+            //                 this.Button4.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button4_ClickBefore);
             this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_0").Specific));
-            //            objform.DataBrowser.BrowseBy = "etdno";
-            //              this.oActiveForm.DataBrowser.BrowseBy = "Item_16";
-            //         this.Button8.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button8_ClickBefore);
-            //         this.Button8.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button8_ClickAfter);
-            //         this.Matrix2.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix2_PressedAfter);
+            //               objform.DataBrowser.BrowseBy = "etdno";
+            //                 this.oActiveForm.DataBrowser.BrowseBy = "Item_16";
+            //            this.Button8.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.Button8_ClickBefore);
+            //            this.Button8.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.Button8_ClickAfter);
+            //            this.Matrix2.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix2_PressedAfter);
             this.Matrix3 = ((SAPbouiCOM.Matrix)(this.GetItem("Item_1").Specific));
             this.Matrix3.ClickAfter += new SAPbouiCOM._IMatrixEvents_ClickAfterEventHandler(this.Matrix3_ClickAfter);
             this.Matrix3.PressedAfter += new SAPbouiCOM._IMatrixEvents_PressedAfterEventHandler(this.Matrix3_PressedAfter);
@@ -228,15 +256,43 @@ namespace PriceList
                     //clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
 
             }
-            if (pVal.ColUID == "Ctdat")
+            if (pVal.ColUID == "Cfdat")
 
             {
-             //   clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
+                //int selr = Matrix0.GetNextSelectedRow(0, BoOrderType.ot_SelectionOrder);
+                int rcount = Matrix0.RowCount - 1;
+                string inew = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row).Specific).Value;
+                for (int j = rcount; j > 0; j--)
+                {
+                    string ino = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(j).Specific).Value;
+                    string fdat = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Ctdat").Cells.Item(j).Specific).Value;
+                    if (inew==ino)
+                    {
+                        string dat = ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Cfdat").Cells.Item(pVal.Row).Specific).Value;
+                        DateTime Tdat=DateTime.ParseExact(dat, "yyyyMMdd", CultureInfo.InvariantCulture);
+                        //DateTime Tdat = DateTime.Parse(dat);
+                        DateTime yday = Tdat.AddDays(-1);
+                        ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Ctdat").Cells.Item(j).Specific).Value = yday.ToString("yyyyMMdd");
+                        break;
+                    }
+                    //arrino = new string[] { ino };
 
-                //Matrix0.AddRow(1,-1);
-                //Matrix0.ClearRowData(Matrix0.RowCount);
-                //Matrix0.Columns.Item("Citno").Cells.Item(pVal.Row + 1).Click();
+                }
 
+                //for (int i = 0; i <= arrino.Length; i++)
+                //{
+                // if (inew == arrino[i])
+                //{
+                //  Application.SBO_Application.SetStatusBarMessage("Need to update", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                //}
+                //}
+
+
+
+            }
+            if(pVal.ColUID=="Ctdat")
+            {
+                clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
             }
             if (pVal.ColUID == "Cfri")
             {
@@ -268,7 +324,7 @@ namespace PriceList
                 {
                     objform.Freeze(false);
                 }
-                clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
+               // clsModule.objaddon.objglobalmethods.Matrix_Addrow(Matrix0, "Citno", "#");
             }
 
         }
@@ -475,6 +531,7 @@ namespace PriceList
                 }
                 string val2 = EditText0.Value;
                 RemoveLastrow(Matrix0, "Citno");
+
                 for (int j = 1; j <=Matrix0.RowCount; j++)
                 {
                     string it= ((SAPbouiCOM.EditText)Matrix0.Columns.Item("Citno").Cells.Item(j).Specific).Value;
@@ -722,7 +779,7 @@ namespace PriceList
 
         private void Button2_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            objform.Refresh();
+            //objform.Refresh();
             //throw new System.NotImplementedException();
 
         }
@@ -746,6 +803,42 @@ namespace PriceList
         private void Form_DataAddAfter(ref BusinessObjectInfo pVal)
         {
             //throw new System.NotImplementedException();
+
+        }
+
+        private void EditText0_KeyDownAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            string code = EditText0.Value;
+            string getdocno = @"SELECT Top 1 T1.""DocNum"" from ""@PRICELISTR"" T0 INNER JOIN ""@PRICELIST"" T1 ON T0.""DocEntry"" = T1.""DocEntry"" where T1.""U_Ccode"" ='" + code + @"' order by T0.""DocEntry"" desc";
+            SAPbobsCOM.Recordset oRsGetdocno = (SAPbobsCOM.Recordset)clsModule.objaddon.objcompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+            oRsGetdocno.DoQuery(getdocno);
+            string value = oRsGetdocno.Fields.Item(0).Value.ToString();
+            int count = oRsGetdocno.RecordCount;
+            if (count != 0)
+            {
+
+                objform.Mode = SAPbouiCOM.BoFormMode.fm_FIND_MODE;
+                EditText2.Value = value;
+                objform.Items.Item("1").Click();
+            }
+
+
+
+
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void EditText0_LostFocusAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            
+            //throw new System.NotImplementedException();
+
+        }
+
+        private void EditText0_GotFocusAfter(object sboObject, SBOItemEventArg pVal)
+        {
+                     //throw new System.NotImplementedException();
 
         }
 
