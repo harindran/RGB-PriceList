@@ -21,6 +21,11 @@ namespace PriceList
                     case "PriceList.Form1":
                         Pricelist_MenuEvent(ref pVal, ref BubbleEvent);
                         break;
+                    case "PriceList.Form2":
+                        objform.EnableMenu("1282", false);
+                        Pricelist_MenuEvent(ref pVal, ref BubbleEvent);
+                        
+                        break;
                 }
             }
             catch (Exception ex)

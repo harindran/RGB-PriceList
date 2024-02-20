@@ -396,10 +396,11 @@ namespace PriceList
                             }
                         case "PriceList.Form2":
                             {
-                                /////clsModule.objaddon.ActualForm = clsModule.objaddon.objapplication.Forms.ActiveForm;
-                                ///
+                                
                                 Form1 activeform = new Form1(true);
-                                activeform.Show();
+                                //SAPbouiCOM.Form objform = clsModule.objaddon.objapplication.Forms.ActiveForm;
+                               activeform.Show();
+
                                 break;
                             }
                     }
