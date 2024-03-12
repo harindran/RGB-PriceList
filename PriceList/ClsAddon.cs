@@ -168,7 +168,7 @@ namespace PriceList
             Menucount = 1;// objapplication.Menus.Item("8448").SubMenus.Count;
             CreateMenu("", Menucount, "PriceList Creation", SAPbouiCOM.BoMenuType.mt_STRING, "PriceList.Form1", "PriceList");
             Menucount += 1;
-            CreateMenu("", Menucount, "PriceList Update", SAPbouiCOM.BoMenuType.mt_STRING, "PriceList.Form2", "PriceList"); Menucount += 1;
+            CreateMenu("", Menucount, "PriceList Display", SAPbouiCOM.BoMenuType.mt_STRING, "PriceList.Form2", "PriceList"); Menucount += 1;
             //CreateMenu("", Menucount, "PriceList Update", SAPbouiCOM.BoMenuType.mt_POPUP, "PRU", "PriceList"); Menucount = 1;
 
             //Menucount += 1; // "43537"
